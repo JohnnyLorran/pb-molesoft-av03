@@ -1,28 +1,24 @@
-package br.com.avlll.estados.model;
+package br.com.avlll.estados.controller.dto;
 
+import br.com.avlll.estados.model.Estado;
+import br.com.avlll.estados.model.Regiao;
 
-import javax.persistence.*;
+public class EstadoDto {
 
-@Entity
-public class Estado {
-
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String nome;
-    @Enumerated(EnumType.STRING)
     private Regiao regiao;
     private long populacao;
     private String capital;
     private long area;
 
-    public Estado(){}
 
-    public Estado(String nome, Regiao regiao ,long populacao, String capital, long area){
-        this.nome = nome;
-        this.regiao = regiao;
-        this.populacao = populacao;
-        this.capital = capital;
-        this.area = area;
+    public EstadoDto(Estado estado){
+        this.nome = estado.getNome();
+        this.regiao = estado.getRegiao();
+        this.populacao = estado.getPopulacao();
+        this.capital = estado.getCapital();
+        this.area = estado.getArea();
     }
 
     public long getId() {

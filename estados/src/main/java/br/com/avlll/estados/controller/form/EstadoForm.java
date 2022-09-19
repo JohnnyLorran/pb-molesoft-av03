@@ -1,37 +1,23 @@
-package br.com.avlll.estados.model;
+package br.com.avlll.estados.controller.form;
 
 
-import javax.persistence.*;
+import br.com.avlll.estados.model.Regiao;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
-@Entity
-public class Estado {
+public class EstadoForm {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @NotNull @NotEmpty
     private String nome;
-    @Enumerated(EnumType.STRING)
+    @NotNull @NotEmpty
     private Regiao regiao;
+    @NotNull @NotEmpty
     private long populacao;
+    @NotNull @NotEmpty
     private String capital;
+    @NotNull @NotEmpty
     private long area;
 
-    public Estado(){}
-
-    public Estado(String nome, Regiao regiao ,long populacao, String capital, long area){
-        this.nome = nome;
-        this.regiao = regiao;
-        this.populacao = populacao;
-        this.capital = capital;
-        this.area = area;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getNome() {
         return nome;
