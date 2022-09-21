@@ -2,8 +2,8 @@ package br.com.avlll.estados.model;
 
 public enum Regiao {
     Norte,
-    Nordest,
+    Nordeste,
     Sul,
     Sudeste,
-    CentroOeste;
+    Centro_Oeste;
 }

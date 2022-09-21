@@ -1,23 +1,35 @@
 package br.com.avlll.estados.controller.form;
 
 
+import br.com.avlll.estados.model.Estado;
 import br.com.avlll.estados.model.Regiao;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 
 public class EstadoForm {
 
-    @NotNull @NotEmpty
+    @NotNull
+    @NotEmpty
     private String nome;
-    @NotNull @NotEmpty
-    private Regiao regiao;
-    @NotNull @NotEmpty
-    private long populacao;
-    @NotNull @NotEmpty
-    private String capital;
-    @NotNull @NotEmpty
-    private long area;
 
+    @NotNull
+    private Regiao regiao;
+
+    @NotNull
+    private long populacao;
+
+    @NotNull
+    @NotEmpty
+    private String capital;
+
+    @NotNull(message = "não pode ser nulo")
+    private BigDecimal area;
+
+    public Estado converter(){
+        return new Estado(nome,regiao,populacao,capital,area);
+    }
 
     public String getNome() {
         return nome;
@@ -51,11 +63,11 @@ public class EstadoForm {
         this.capital = capital;
     }
 
-    public long getArea() {
+    public BigDecimal getArea() {
         return area;
     }
 
-    public void setArea(long area) {
+    public void setArea(BigDecimal area) {
         this.area = area;
     }
 }

@@ -1,41 +1,49 @@
-package br.com.avlll.estados.controller.dto;
+package br.com.avlll.estados.controller.form;
 
 import br.com.avlll.estados.model.Estado;
 import br.com.avlll.estados.model.Regiao;
+import br.com.avlll.estados.respository.EstadoRepository;
+import br.com.avlll.estados.utils.funcoes.VerificaRegiao;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.stream.Collectors;
 
-public class EstadoDto {
+public class AtualizacaoEstadoForm {
 
-    private long id;
     private String nome;
+
     private Regiao regiao;
+
     private long populacao;
+
     private String capital;
+
     private BigDecimal area;
 
+    public Estado atualizar(Long id, EstadoRepository estadoRepository) {
+        Estado estado = estadoRepository.getReferenceById(id);
 
-    public EstadoDto(Estado estado) {
-        this.id = estado.getId();
-        this.nome = estado.getNome();
-        this.regiao = estado.getRegiao();
-        this.populacao = estado.getPopulacao();
-        this.capital = estado.getCapital();
-        this.area = estado.getArea();
-    }
+        if(this.nome != null){
+            estado.setNome(this.nome);
+        }
 
-    public static List<EstadoDto> converter(List<Estado> estados) {
-        return estados.stream().map(EstadoDto::new).collect(Collectors.toList());
-    }
+        VerificaRegiao verificaRegiao = new VerificaRegiao();
+        if(verificaRegiao.validaRegiao(this.regiao)){
+            estado.setRegiao(this.regiao);
+        }
 
-    public long getId() {
-        return id;
-    }
+        if(this.populacao > 0){
+            estado.setPopulacao(this.populacao);
+        }
 
-    public void setId(long id) {
-        this.id = id;
+        if(this.capital != null){
+            estado.setCapital(this.capital);
+        }
+
+        if (this.area != null){
+            estado.setArea(this.area);
+        }
+
+        return estado;
     }
 
     public String getNome() {
@@ -78,4 +86,3 @@ public class EstadoDto {
         this.area = area;
     }
 }
-

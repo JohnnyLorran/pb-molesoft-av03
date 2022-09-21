@@ -3,6 +3,7 @@ package br.com.avlll.estados.model;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "USUARIOS")
 public class Usuario {
 
     @Id
