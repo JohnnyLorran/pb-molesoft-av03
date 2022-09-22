@@ -15,5 +15,4 @@ public class VerificaRegiao {
     return false;
     }
 
-
 }
