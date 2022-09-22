@@ -15,6 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @RestController
@@ -33,33 +34,6 @@ public class EstadosController {
         return ResponseEntity.created(uri).body(new EstadoDto(estado));
     }
 
-    @GetMapping
-    public List<EstadoDto> listar(@RequestParam(required = false, defaultValue = "") Regiao regiao,
-                                  @RequestParam(required = false, defaultValue = "regiao") String order) {
-
-        Sort sort = Sort.by(order).descending();
-        List<Estado> estados;
-        if(regiao != null && "regiao".equals(order)){
-            //Condição apenas com região / ordena por nome a-z
-            sort = Sort.by("nome").ascending();
-            estados = estadoRepository.findByRegiao(regiao,sort);
-        }else if("regiao".equals(order)) {
-            //Condição sem paramêtro nenhum / orderna por região a-z
-            sort = Sort.by(order).ascending();
-            estados = estadoRepository.findAll(sort);
-        }else{
-            //Condição com região e order / orderna pela maior area ou população
-            estados = estadoRepository.findByRegiao(regiao,sort);
-        }
-        return EstadoDto.converter(estados);
-    }
-
-    @GetMapping("/{id}")
-    public  ResponseEntity<EstadoDto> detalhar(@PathVariable Long id){
-        Optional<Estado> estado = estadoRepository.findById(id);
-        return estado.map(value -> ResponseEntity.ok(new EstadoDto(value))).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity<EstadoDto> atualizar(@PathVariable Long id, @RequestBody AtualizacaoEstadoForm estadoForm){
@@ -69,6 +43,37 @@ public class EstadosController {
             return ResponseEntity.ok(new EstadoDto(estado));
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping
+    public List<EstadoDto> listar(@RequestParam(required = false) Regiao regiao,
+                                  @RequestParam(required = false, defaultValue = "regiao") String order) {
+
+        Sort sort = Sort.by(order.toLowerCase(Locale.ROOT)).descending();
+        List<Estado> estados;
+            if (regiao != null && "regiao".equals(order)) {
+                //Condição apenas com região / ordena por nome a-z
+                sort = Sort.by("nome").ascending();
+                estados = estadoRepository.findByRegiao(regiao, sort);
+            } else if (!"".equals(order)) {
+                //Condição sem paramêtro nenhum ou com order por area ou populacao/ orderna por região a-z
+                if (!"populacao".equals(order) && !"area".equals(order)) {
+                    //sem nenhum paramêtro
+                    sort = Sort.by(order).ascending();
+                }
+                estados = estadoRepository.findAll(sort);
+            } else {
+                //Condição com região e order / orderna pela maior area ou população
+                estados = estadoRepository.findByRegiao(regiao, sort);
+            }
+            return EstadoDto.converter(estados);
+
+    }
+
+    @GetMapping("/{id}")
+    public  ResponseEntity<EstadoDto> detalhar(@PathVariable Long id){
+        Optional<Estado> estado = estadoRepository.findById(id);
+        return estado.map(value -> ResponseEntity.ok(new EstadoDto(value))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")

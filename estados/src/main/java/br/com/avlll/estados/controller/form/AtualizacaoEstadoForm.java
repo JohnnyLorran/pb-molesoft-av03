@@ -21,28 +21,16 @@ public class AtualizacaoEstadoForm {
 
     public Estado atualizar(Long id, EstadoRepository estadoRepository) {
         Estado estado = estadoRepository.getReferenceById(id);
-
-        if(this.nome != null){
-            estado.setNome(this.nome);
-        }
-
+        estado.setNome(this.nome);
         VerificaRegiao verificaRegiao = new VerificaRegiao();
         if(verificaRegiao.validaRegiao(this.regiao)){
             estado.setRegiao(this.regiao);
+        }else{
+            return null;
         }
-
-        if(this.populacao > 0){
-            estado.setPopulacao(this.populacao);
-        }
-
-        if(this.capital != null){
-            estado.setCapital(this.capital);
-        }
-
-        if (this.area != null){
-            estado.setArea(this.area);
-        }
-
+        estado.setPopulacao(this.populacao);
+        estado.setCapital(this.capital);
+        estado.setArea(this.area);
         return estado;
     }
 

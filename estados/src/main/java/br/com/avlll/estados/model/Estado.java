@@ -1,6 +1,5 @@
 package br.com.avlll.estados.model;
 
-
 import javax.persistence.*;
 import java.math.BigDecimal;
 
@@ -21,7 +20,22 @@ public class Estado {
     public Estado() {
     }
 
-    public Estado(String nome, Regiao regiao, long populacao, String capital, BigDecimal area){}
+    public Estado(String nome, Regiao regiao, long populacao, String capital, BigDecimal area){
+        this.nome = nome;
+        this.regiao = regiao;
+        this.populacao = populacao;
+        this.capital = capital;
+        this.area = area;
+    }
+
+    public Estado(Long id,String nome, Regiao regiao, long populacao, String capital, BigDecimal area){
+        this.id = id;
+        this.nome = nome;
+        this.regiao = regiao;
+        this.populacao = populacao;
+        this.capital = capital;
+        this.area = area;
+    }
 
     public long getId() {
         return id;
