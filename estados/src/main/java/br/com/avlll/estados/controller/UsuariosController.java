@@ -30,6 +30,7 @@ public class UsuariosController {
         Usuario usuario = usuarioForm.converter();
         Optional<Usuario> usuarioCheck = usuarioRepository.findByEmail(usuario.getEmail());
         if(usuarioCheck.isEmpty()){
+            System.out.println(usuario.getSenha());
             usuarioRepository.save(usuario);
             URI uri = uriBuilder.path("/api/v1/usuarios/{id}").buildAndExpand(usuario.getId()).toUri();
             return ResponseEntity.created(uri).body(new UsuarioDto(usuario));

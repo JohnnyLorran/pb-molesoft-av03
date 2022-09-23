@@ -1,6 +1,7 @@
 package br.com.avlll.estados.controller.form;
 
 import br.com.avlll.estados.model.Usuario;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -18,7 +19,7 @@ public class UsuarioForm {
     private String senha;
 
     public Usuario converter() {
-        return new Usuario(nome,email,senha);
+        return new Usuario(nome,email,new BCryptPasswordEncoder().encode(senha));
     }
 
 
