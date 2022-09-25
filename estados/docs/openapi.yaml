@@ -1,0 +1,387 @@
+openapi: 3.0.3
+info:
+  title: API de Estados do Brasil
+  description: API para consultar os dados do estados do Brasil, como área, população, entre outros. 
+  version: 0.0.1
+  contact:
+    name: Johnny Lorran 
+    email: johnny.rocha.pb@compass.com.br
+    url: https://github.com/JohnnyLorran
+servers:
+- url: http://localhost:8080/api/v1
+  description: API para testes
+
+paths:
+  /autenticacao:
+    post:
+      tags:
+        - Autenticação do usuário
+      summary: Gera um token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Autenticacao'
+      responses:
+        201:
+          description: "Criado com Sucesso"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  tipo:
+                    type: string
+  /usuarios:
+    post:
+      tags:
+        - Novo Usuário
+      summary: Cria um novo usuário
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NovoUsuario'
+      responses:
+        201:
+          description: "Criado com Sucesso"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  nome:
+                    type: string
+                  email:
+                    type: string
+                  senha:
+                    type: integer
+        400:
+          description: "Falha ao criar novo estado"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  timestamp:
+                    type: string
+                  status:
+                    type: integer
+                  error:
+                    type: string
+                  path:
+                    type: string
+    get:
+      tags: 
+        - Listar Usuários
+      summary: Lista todos os usuários
+      responses:
+        200:
+          description: "Carregado com sucesso"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    nome:
+                      type: string
+                    email:
+                      type: string
+                    senha:
+                     type: string
+  /usuarios/{id}:
+    put:
+      tags:
+        - Atualizar Usuário
+      summary: Atualiza os dados de um Usuário.
+      parameters: 
+      - name: id
+        in: path
+        schema:
+          type: string
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+               $ref: '#/components/schemas/NovoUsuario'
+      responses:
+        200:
+          description: "Atualizado com Sucesso"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  nome:
+                    type: string
+                  email:
+                    type: string
+                  senha:
+                    type: string
+        400:
+          description: "Erro ao alterar usuário"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  timestamp:
+                    type: string
+                  status:
+                    type: integer
+                  error:
+                    type: string
+                  path:
+                    type: string
+        404:
+          description: "Usuário não encontrado"
+  /estados:
+    post:
+      tags:
+        - Novo Estado
+      summary: Cria um novo estado
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NovoEstado'
+      responses:
+        201:
+          description: "Criado com Sucesso"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  nome:
+                    type: string
+                  regiao:
+                    type: string
+                  populacao:
+                    type: integer
+                  capital:
+                    type: string
+                  area:
+                    type: integer
+        400:
+          description: "Falha ao criar novo estado"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  timestamp:
+                    type: string
+                  status:
+                    type: integer
+                  error:
+                    type: string
+                  path:
+                    type: string
+    get:
+      tags: 
+        - Listar Estados
+      summary: Lista os Estados
+      parameters: 
+      - name: regiao
+        in: query
+        schema:
+          type: string
+        required: false
+      - name: order
+        in: query
+        schema:
+          type: string
+        required: false
+      responses:
+        200:
+          description: "Carregado com sucesso"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListarEstados'
+  /estados/{id}:
+    put:
+      tags:
+        - Atualizar Estado
+      summary: Atualiza os dados de um Estado.
+      parameters: 
+      - name: id
+        in: path
+        schema:
+          type: string
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NovoEstado'
+      responses:
+        200:
+          description: "Atualizado com Sucesso"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  nome:
+                    type: string
+                  regiao:
+                    type: string
+                  populacao:
+                    type: integer
+                  capital:
+                    type: string
+                  area:
+                    type: integer
+        400:
+          description: "Falha ao atualizar Estado"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  timestamp:
+                    type: string
+                  status:
+                    type: integer
+                  error:
+                    type: string
+                  path:
+                    type: string
+    get:
+      tags: 
+        - Estado
+      summary: Lista um único Estado
+      parameters: 
+      - name: id
+        in: path
+        schema:
+          type: string
+        required: true
+      responses:
+        200:
+          description: "Carregado com sucesso"
+          content:
+            application/json:
+              schema:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    nome:
+                      type: string
+                    regiao:
+                      type: string
+                    populacao:
+                      type: integer
+                    capital:
+                      type: string
+                    area:
+                      type: integer
+        404:
+          description: "Não encontrado"
+                      
+security:
+- authentication: []
+components:
+  schemas:
+    Autenticacao:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: usuario@gmail.com
+        senha:
+          type: string
+          example: 123abc
+    NovoUsuario:
+      type: object
+      properties:
+        nome:
+          type: string
+          format: string
+          example: johnny lorran santoro
+        email:
+          type: string
+          format: email
+          example: usuario@gmail.com
+        senha:
+          type: string
+          example: 123abc
+    NovoEstado:
+      type: object
+      properties:
+        nome:
+          type: string
+          format: string
+          example: Minas Gerais
+        regiao:
+          type: string
+          description: Region with first letter in uppercase
+          example: Centro_Oeste
+          enum:
+            - Centro_Oeste
+            - Sul
+            - Sudeste
+            - Norte
+            - Nordeste
+        populacao:
+          type: integer
+          example: 6541153
+        capital:
+          type: string
+          example: Belo Horizonte
+        area:
+          type: integer
+          example: 454545
+    ListarEstados:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        nome:
+          type: string
+          format: string
+          example: Minas Gerais
+        regiao:
+          type: string
+          description: Region with first letter in uppercase
+          example: Centro_Oeste
+          enum:
+            - Centro_Oeste
+            - Sul
+            - Sudeste
+            - Norte
+            - Nordeste
+        populacao:
+          type: integer
+          example: 6541153
+        capital:
+          type: string
+          example: Belo Horizonte
+        area:
+          type: integer
+          example: 454545
+  securitySchemes:
+      authentication:
+        type: http
+        scheme: bearer
+        bearerFormat: JWT

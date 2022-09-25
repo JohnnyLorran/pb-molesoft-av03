@@ -67,7 +67,6 @@ public class EstadosController {
                 estados = estadoRepository.findByRegiao(regiao, sort);
             }
             return EstadoDto.converter(estados);
-
     }
 
     @GetMapping("/{id}")
