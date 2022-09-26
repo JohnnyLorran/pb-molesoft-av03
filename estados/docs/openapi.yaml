@@ -417,7 +417,6 @@ components:
             area:
               type: integer
               example: 454545
-              
   securitySchemes:
       authentication:
         type: http
