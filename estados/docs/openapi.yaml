@@ -10,14 +10,20 @@ info:
 servers:
 - url: http://localhost:8080/api/v1
   description: API para testes
+tags:
+  - name: Autenticação
+  - name: Usuários
+  - name: Estados
 
 paths:
   /autenticacao:
     post:
       tags:
-        - Autenticação do usuário
-      summary: Gera um token
+        - Autenticação
+      summary: Autentica um usuário
+      description: "Autentica um usuário já registrado, gerando um token JWT, para que seja inserido em ' Authorize ' e liberar todas as rotas da API."
       requestBody:
+        description: Coloque os seus dados, conforme o exemplo abaixo.
         content:
           application/json:
             schema:
@@ -37,9 +43,10 @@ paths:
   /usuarios:
     post:
       tags:
-        - Novo Usuário
+        - Usuários
       summary: Cria um novo usuário
       requestBody:
+        description: Para criar um novo usuário, siga o exemplo abaixo, colocando os seus dados.
         content:
           application/json:
             schema:
@@ -59,7 +66,7 @@ paths:
                   email:
                     type: string
                   senha:
-                    type: integer
+                    type: string
         400:
           description: "Falha ao criar novo estado"
           content:
@@ -77,31 +84,26 @@ paths:
                     type: string
     get:
       tags: 
-        - Listar Usuários
+        - Usuários
       summary: Lista todos os usuários
+      description: Lista todos os usuários existentes registrados
       responses:
         200:
           description: "Carregado com sucesso"
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    nome:
-                      type: string
-                    email:
-                      type: string
-                    senha:
-                     type: string
+                $ref: '#/components/schemas/ListarUsuarios'
+        403:
+          description: "Acesso negado"
+      security:
+      - authentication: [] 
   /usuarios/{id}:
     put:
       tags:
-        - Atualizar Usuário
-      summary: Atualiza os dados de um Usuário.
+        - Usuários
+      summary: Atualiza os dados de um usuário
+      description: Atualiza os dados de um usuário existente pelo "ID"
       parameters: 
       - name: id
         in: path
@@ -109,6 +111,7 @@ paths:
           type: string
         required: true
       requestBody:
+        description: Altere os dados e envie json conforme o exemplo abaixo, todos os campos são necessários, mesmo que não haja alteração.
         content:
           application/json:
             schema:
@@ -130,7 +133,7 @@ paths:
                   senha:
                     type: string
         400:
-          description: "Erro ao alterar usuário"
+          description: "Erro ao alterar usuário, verifique se todos os campos foram preenchidos corretamente"
           content:
             application/json:
               schema:
@@ -144,14 +147,19 @@ paths:
                     type: string
                   path:
                     type: string
+        403:
+          description: "Acesso negado"
         404:
-          description: "Usuário não encontrado"
+          description: "Email já utilizado, insira outro"
+      security:
+      - authentication: []   
   /estados:
     post:
       tags:
-        - Novo Estado
+        - Estados
       summary: Cria um novo estado
       requestBody:
+        description: "Para inserir um novo estado, siga o exemplo abaixo."
         content:
           application/json:
             schema:
@@ -191,10 +199,15 @@ paths:
                     type: string
                   path:
                     type: string
+        403:
+          description: "Acesso negado"
+      security:
+        - authentication: []   
     get:
       tags: 
-        - Listar Estados
+        - Estados
       summary: Lista os Estados
+      description: "Lista todos os Estados já registrados."
       parameters: 
       - name: regiao
         in: query
@@ -216,15 +229,17 @@ paths:
   /estados/{id}:
     put:
       tags:
-        - Atualizar Estado
-      summary: Atualiza os dados de um Estado.
+        - Estados
+      summary: Atualiza os dados de um estado.
+      description: "Atualiza os dados de um estado já registrado pelo 'ID' do mesmo"
       parameters: 
       - name: id
         in: path
         schema:
-          type: string
+          type: integer
         required: true
       requestBody:
+        description: "Para atualizar o estado, todos os campos abaixo são obrigatórios, mesmo que não tenha alteração, conforme o exemplo."
         content:
           application/json:
             schema:
@@ -250,7 +265,7 @@ paths:
                   area:
                     type: integer
         400:
-          description: "Falha ao atualizar Estado"
+          description: "Falha ao atualizar Estado, verifique se todos os campos foram preenchidos corretamente"
           content:
             application/json:
               schema:
@@ -264,15 +279,22 @@ paths:
                     type: string
                   path:
                     type: string
+        403:
+          description: "Acesso negado"
+        404:
+          description: "'ID' do estado não encontrado"
+      security:
+        - authentication: []          
     get:
       tags: 
-        - Estado
+        - Estados
       summary: Lista um único Estado
+      description: "Lista um único Estado, caso já esteja registado, pelo 'ID'"
       parameters: 
       - name: id
         in: path
         schema:
-          type: string
+          type: integer
         required: true
       responses:
         200:
@@ -295,10 +317,8 @@ paths:
                     area:
                       type: integer
         404:
-          description: "Não encontrado"
-                      
-security:
-- authentication: []
+          description: "'ID' do estado não encontrao"
+      
 components:
   schemas:
     Autenticacao:
@@ -316,7 +336,6 @@ components:
       properties:
         nome:
           type: string
-          format: string
           example: johnny lorran santoro
         email:
           type: string
@@ -325,6 +344,24 @@ components:
         senha:
           type: string
           example: 123abc
+    ListarUsuarios:
+      type: array
+      items:
+          properties:
+            id:
+              type: integer
+              example: 1
+            nome:
+              type: string
+              example: johnny lorran santoro
+            email:
+              type: string
+              format: email
+              example: usuario@gmail.com
+            senha:
+              type: string
+              description: "A senha irá vir com hash, então não tem como saber a verdadeira senha do usuário."
+              example: "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJBUEkgLSBFc3RhZG9zIiwic3ViIjoiMSIsImlhdCI6MTY2NDA2NjY1MywiZXhwIjoxNjY0MTUzMDUzfQ.Bt5IGIrqyAB8NJ-zFy7hAmWeqP0nElBsRGGFutwwB2Y"
     NovoEstado:
       type: object
       properties:
@@ -334,7 +371,7 @@ components:
           example: Minas Gerais
         regiao:
           type: string
-          description: Region with first letter in uppercase
+          description: "O nome da região deve começar com a primeira letra maiscúla."
           example: Centro_Oeste
           enum:
             - Centro_Oeste
@@ -352,34 +389,35 @@ components:
           type: integer
           example: 454545
     ListarEstados:
-      type: object
-      properties:
-        id:
-          type: number
-          example: 1
-        nome:
-          type: string
-          format: string
-          example: Minas Gerais
-        regiao:
-          type: string
-          description: Region with first letter in uppercase
-          example: Centro_Oeste
-          enum:
-            - Centro_Oeste
-            - Sul
-            - Sudeste
-            - Norte
-            - Nordeste
-        populacao:
-          type: integer
-          example: 6541153
-        capital:
-          type: string
-          example: Belo Horizonte
-        area:
-          type: integer
-          example: 454545
+      type: array
+      items:
+          properties:
+            id:
+              type: number
+              example: 1
+            nome:
+              type: string
+              example: Minas Gerais
+            regiao:
+              type: string
+              description: "O nome da região deve começar com a primeira letra maiscúla."
+              example: Centro_Oeste
+              enum:
+                - Centro_Oeste
+                - Sul
+                - Sudeste
+                - Norte
+                - Nordeste
+            populacao:
+              type: integer
+              example: 6541153
+            capital:
+              type: string
+              example: Belo Horizonte
+            area:
+              type: integer
+              example: 454545
+              
   securitySchemes:
       authentication:
         type: http
