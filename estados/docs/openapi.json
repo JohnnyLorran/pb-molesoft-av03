@@ -1,0 +1,645 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "API de Estados do Brasil",
+    "description": "API para consultar os dados do estados do Brasil, como área, população, entre outros.",
+    "version": "0.0.1",
+    "contact": {
+      "name": "Johnny Lorran",
+      "email": "johnny.rocha.pb@compass.com.br",
+      "url": "https://github.com/JohnnyLorran"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080/api/v1",
+      "description": "API para testes"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Autenticação"
+    },
+    {
+      "name": "Usuários"
+    },
+    {
+      "name": "Estados"
+    }
+  ],
+  "paths": {
+    "/autenticacao": {
+      "post": {
+        "tags": [
+          "Autenticação"
+        ],
+        "summary": "Autentica um usuário",
+        "description": "Autentica um usuário já registrado, gerando um token JWT, para que seja inserido em ' Authorize ' e liberar todas as rotas da API.",
+        "requestBody": {
+          "description": "Coloque os seus dados, conforme o exemplo abaixo.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Autenticacao"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Criado com Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    },
+                    "tipo": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/usuarios": {
+      "post": {
+        "tags": [
+          "Usuários"
+        ],
+        "summary": "Cria um novo usuário",
+        "requestBody": {
+          "description": "Para criar um novo usuário, siga o exemplo abaixo, colocando os seus dados.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NovoUsuario"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Criado com Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "nome": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "senha": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Falha ao criar novo estado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "timestamp": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "error": {
+                      "type": "string"
+                    },
+                    "path": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Usuários"
+        ],
+        "summary": "Lista todos os usuários",
+        "description": "Lista todos os usuários existentes registrados",
+        "responses": {
+          "200": {
+            "description": "Carregado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListarUsuarios"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/usuarios/{id}": {
+      "put": {
+        "tags": [
+          "Usuários"
+        ],
+        "summary": "Atualiza os dados de um usuário",
+        "description": "Atualiza os dados de um usuário existente pelo \"ID\"",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "Altere os dados e envie json conforme o exemplo abaixo, todos os campos são necessários, mesmo que não haja alteração.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NovoUsuario"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Atualizado com Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "nome": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "senha": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro ao alterar usuário",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "timestamp": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "error": {
+                      "type": "string"
+                    },
+                    "path": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          }
+        },
+        "security": [
+          {
+            "authentication": []
+          }
+        ]
+      }
+    },
+    "/estados": {
+      "post": {
+        "tags": [
+          "Estados"
+        ],
+        "summary": "Cria um novo estado",
+        "requestBody": {
+          "description": "Para inserir um novo estado, siga o exemplo abaixo",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NovoEstado"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Criado com Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "nome": {
+                      "type": "string"
+                    },
+                    "regiao": {
+                      "type": "string"
+                    },
+                    "populacao": {
+                      "type": "integer"
+                    },
+                    "capital": {
+                      "type": "string"
+                    },
+                    "area": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Falha ao criar novo estado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "timestamp": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "error": {
+                      "type": "string"
+                    },
+                    "path": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "authentication": []
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Estados"
+        ],
+        "summary": "Lista os Estados",
+        "description": "Lista todos os Estados já registrados.",
+        "parameters": [
+          {
+            "name": "regiao",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Carregado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListarEstados"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/estados/{id}": {
+      "put": {
+        "tags": [
+          "Estados"
+        ],
+        "summary": "Atualiza os dados de um estado.",
+        "description": "Atualiza os dados de um estado já registrado pelo \"ID\" do mesmo",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "Para atualizar o estado, todos os campos abaixo são obrigatórios, mesmo que não tenha alteração, conforme o exemplo.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NovoEstado"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Atualizado com Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "nome": {
+                      "type": "string"
+                    },
+                    "regiao": {
+                      "type": "string"
+                    },
+                    "populacao": {
+                      "type": "integer"
+                    },
+                    "capital": {
+                      "type": "string"
+                    },
+                    "area": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Falha ao atualizar Estado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "timestamp": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "error": {
+                      "type": "string"
+                    },
+                    "path": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "authentication": []
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Estados"
+        ],
+        "summary": "Lista um único Estado",
+        "description": "Lista um único Estado, caso já esteja registado, pelo \"ID\"",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Carregado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "nome": {
+                      "type": "string"
+                    },
+                    "regiao": {
+                      "type": "string"
+                    },
+                    "populacao": {
+                      "type": "integer"
+                    },
+                    "capital": {
+                      "type": "string"
+                    },
+                    "area": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Não encontrado"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Autenticacao": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "usuario@gmail.com"
+          },
+          "senha": {
+            "type": "string",
+            "example": "123abc"
+          }
+        }
+      },
+      "NovoUsuario": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "example": "johnny lorran santoro"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "usuario@gmail.com"
+          },
+          "senha": {
+            "type": "string",
+            "example": "123abc"
+          }
+        }
+      },
+      "ListarUsuarios": {
+        "type": "array",
+        "items": {
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1
+            },
+            "nome": {
+              "type": "string",
+              "example": "johnny lorran santoro"
+            },
+            "email": {
+              "type": "string",
+              "format": "email",
+              "example": "usuario@gmail.com"
+            },
+            "senha": {
+              "type": "string",
+              "description": "A senha irá vir com hash, então não tem como saber a verdadeira senha do usuário.",
+              "example": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJBUEkgLSBFc3RhZG9zIiwic3ViIjoiMSIsImlhdCI6MTY2NDA2NjY1MywiZXhwIjoxNjY0MTUzMDUzfQ.Bt5IGIrqyAB8NJ-zFy7hAmWeqP0nElBsRGGFutwwB2Y"
+            }
+          }
+        }
+      },
+      "NovoEstado": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "format": "string",
+            "example": "Minas Gerais"
+          },
+          "regiao": {
+            "type": "string",
+            "description": "Region with first letter in uppercase",
+            "example": "Centro_Oeste",
+            "enum": [
+              "Centro_Oeste",
+              "Sul",
+              "Sudeste",
+              "Norte",
+              "Nordeste"
+            ]
+          },
+          "populacao": {
+            "type": "integer",
+            "example": 6541153
+          },
+          "capital": {
+            "type": "string",
+            "example": "Belo Horizonte"
+          },
+          "area": {
+            "type": "integer",
+            "example": 454545
+          }
+        }
+      },
+      "ListarEstados": {
+        "type": "array",
+        "items": {
+          "properties": {
+            "id": {
+              "type": "number",
+              "example": 1
+            },
+            "nome": {
+              "type": "string",
+              "example": "Minas Gerais"
+            },
+            "regiao": {
+              "type": "string",
+              "description": "O nome da região deverá ter a primeira letra MAIÚSCULA de cada palavra",
+              "example": "Centro_Oeste",
+              "enum": [
+                "Centro_Oeste",
+                "Sul",
+                "Sudeste",
+                "Norte",
+                "Nordeste"
+              ]
+            },
+            "populacao": {
+              "type": "integer",
+              "example": 6541153
+            },
+            "capital": {
+              "type": "string",
+              "example": "Belo Horizonte"
+            },
+            "area": {
+              "type": "integer",
+              "example": 454545
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "authentication": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
