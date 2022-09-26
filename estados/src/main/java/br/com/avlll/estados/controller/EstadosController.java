@@ -18,8 +18,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
+
 @RestController
 @RequestMapping("/api/v1/estados")
+@CrossOrigin
 public class EstadosController {
 
     @Autowired

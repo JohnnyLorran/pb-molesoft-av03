@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -19,6 +18,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/usuarios")
+@CrossOrigin
 public class UsuariosController {
 
     @Autowired
